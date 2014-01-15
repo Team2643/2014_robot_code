@@ -60,6 +60,7 @@ public class EncoderDrive extends SimpleRobot {
          * US==UltraSonic
          * Range:0-500
          */
+        int dummy = 5;
         int usValue = 0;
         int smallestUSValue = 10000;//
         int largestUSValue = -100;
