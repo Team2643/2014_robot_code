@@ -158,9 +158,20 @@ public class EncoderDrive extends SimpleRobot {
     }
     
     public void armControl() {
-        setPoint = stick1.getZ() * inverter;
+        if (stick1.getRawButton(4))
+        {
+            setPoint = 0.5;
+        }
+        if (stick1.getRawButton(5))
+        {
+            setPoint = - 0.5;
+        }
+        //setPoint = stick1.getZ() * inverter;
         currentPoint = potConvert(armPot.getValue());
         armDifference = (setPoint - currentPoint) / 2;
+        armMotor.set(armDifference);
+        System.out.println(armDifference);
+        
     // TO DO:
     }
 
@@ -214,7 +225,7 @@ public class EncoderDrive extends SimpleRobot {
      */
     public void autonomous() {
         System.out.println("Autonomous is ON");
-        driveEncoder.start();
+        driveEncoder.start();//encoders 360 ticks per turn
         double autoWC = 2.54; //one inch in centimeters
         double autoDE = driveEncoder.get() / 360.0;
         double autoDT = (autoDE * autoWC);
@@ -222,6 +233,7 @@ public class EncoderDrive extends SimpleRobot {
 
         while (autoDT <= (2.54 * 60)) //5 feet in centimeters
         {
+            
             autoDE = driveEncoder.get() / 360.0;
             autoDT = (autoDE * autoWC);
             winchMotor.set(.3);
@@ -275,9 +287,12 @@ public class EncoderDrive extends SimpleRobot {
              climbing_motor.set(climbspeed);
              */
 
-
-            // drive.arcadeDrive(stick1);
-
+            
+            
+           //  drive.arcadeDrive(stick1);
+             
+             
+             
 
 
             /*
@@ -285,7 +300,7 @@ public class EncoderDrive extends SimpleRobot {
              pickUpMotor.set(stick1.getZ());
              }
              */
-            System.out.println(potConvert(armPot.getValue()));
+          //  System.out.println(potConvert(armPot.getValue()));
 
 
 
