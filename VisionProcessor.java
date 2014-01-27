@@ -30,12 +30,18 @@ public class VisionProcessor {
         * */
         
         PrintWriter sysOut = new PrintWriter(System.out, true);
-while (true){
+//while (true){
+for (int ii = 0; ii < 10000; ii++) {        
         BufferedImage img = ImageInitializer.returnImage("http://10.26.43.11/jpg/image.jpg");
-
+//        BufferedImage img = ImageInitializer.returnImage("file:///C:/Users/User/Documents/NetBeansProjects/FRCVision2014/VisionImages/2014%20Vision%20Target/Center_18ft_On.jpg");
+//          BufferedImage img = ImageInitializer.returnImage("http://10.26.43.11/axis-cgi/jpg/image.cgi");
+         
+                
         int width = img.getWidth();
         int height = img.getHeight();
-        
+//        int[] pixel = new int[width*height];
+
+//        img.getRGB(0, 0, width, height, pixel, 0, width);;
 
         boolean[][] array = initializeArray(width, height);
 
@@ -43,6 +49,7 @@ while (true){
             for (int w = 0; w < width; w++) {
                 int pixel = img.getRGB(w, h);
                 Color c = new Color(pixel);
+//                Color c = new Color(pixel[w+h*width]);
 
                 array[w][h] = PixelAnalyzer.isColor(c);
             }
@@ -52,10 +59,14 @@ while (true){
         //ArrayList<PixelCluster> pixelClusters = 
         arrayAnalyzer.analyze();
         
+        boolean targetHot = false;
         for (int i = 0; i < arrayAnalyzer.getClusters().size(); i++) {  
         arrayAnalyzer.getClusters().get(i).getClusterElements(sysOut);
-        arrayAnalyzer.getClusters().get(i).getClusterElements(out);
+       targetHot = targetHot || arrayAnalyzer.getClusters().get(i).isHot();
+        
+        //arrayAnalyzer.getClusters().get(i).getRectangularity();
         }
+        out.println(targetHot);
 }
                 
                 
