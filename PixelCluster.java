@@ -1,9 +1,9 @@
-package visionprocessor;
+package visionprocessing;
 
 import java.util.ArrayList;
 import java.io.PrintWriter;
 
-public class PixelCluster //used to find the bounding box
+public class PixelCluster //  used to find the bounding box
 {
     public PixelCluster( int w , int h )
     {
@@ -33,7 +33,7 @@ public class PixelCluster //used to find the bounding box
             out.println("Goal is hot \t");
         }
         out.println("");
-        //this.getRectangularity();
+        //  this.getRectangularity();
         }
         
     }
@@ -75,29 +75,35 @@ public class PixelCluster //used to find the bounding box
     
     public double getRatio(float localMaxX, float localMaxY, float localMinX, float localMinY)
     {
-        //Get the ratio of the height of the cluster compared to the width
+        //    Get the ratio of the height of the cluster compared to the width
         double rectLength = localMaxX - localMinX;
         double rectHeight = localMaxY - localMinY;
         double ratio = rectLength / rectHeight;
+        //    calculating slope and image has a larger x than y so ratio will be >=1
         return ratio;
         
     }
-    public double getRectangularity(float localMaxX, float localMaxY, float localMinX, float localMinY, float localNumPix)//get how much of the bounding box has color inside of it
+    public double getRectangularity(float localMaxX, float localMaxY,
+            float localMinX, float localMinY, float localNumPix)
     {
+        //    get how much of the bounding box has color inside of it
         double rectLength = localMaxX - localMinX;
         double rectHeight = localMaxY - localMinY;
         double area = rectLength * rectHeight;
         double rectangularity = localNumPix / area;
-        //System.out.println("Rectangularity: " + rectangularity + "\n");
+        //    rectangularity is how well the image fits in the bounded rectangle
+        //    0 <= rectangularity <= 1
+        //    System.out.println("Rectangularity: " + rectangularity + "\n");
         return rectangularity;
     }
     
     public boolean isHot()
     {
-        
+        //  true means goal is lit
         boolean hot = false;
         if ( numberOfPixels > 100 )
-        if (this.getRectangularity(maxX,maxY,minX,minY,numberOfPixels) >= 0.8 && this.getRatio(maxX, maxY, minX, minY) >= 5 )
+        if (this.getRectangularity(maxX,maxY,minX,minY,numberOfPixels) >= 0.8 &&
+                this.getRatio(maxX, maxY, minX, minY) >= 5 )
             hot = true;
         
         return hot;
@@ -122,17 +128,17 @@ public class PixelCluster //used to find the bounding box
     
     public void getCoordinate()
     {
-        //Get the coordinates of the cluster's bounding box
+        //  Get the coordinates of the cluster's bounding box
     }
     public void getDistance()
     {
-        //Return the distance of the object to the robot in ___
+        //  Return the distance of the object to the robot in ___
         
         
     }
     public void finalize()
     {
-        //Set width, height, and coordinates
+        //  Set width, height, and coordinates
     }
     
     private ArrayList<Integer> array = new ArrayList<Integer>();
