@@ -110,38 +110,76 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.Encoder;
 import com.sun.squawk.util.MathUtils;
+import javax.microedition.io.*;
+import java.io.*;
 
 public class EncoderDrive extends SimpleRobot {
-
-    private AnalogChannel armPot = new AnalogChannel(4);
+    
+    /*
+     * Port Numbers
+     */
+    final int armPotAnalogChannel = 4;
+    final int winchMotorPWM = 3;
+    final int pistonOut = 3;
+    final int pistonIn = 4;
+    final int limitSwitch = 3;
+    final int pickUpMotorPWM = 5;
+    final int leftFrontMotorPWM = 1;
+    final int rightFrontMotorPWM = 2;
+    final int leftBackMotorPWM = 9;
+    final int rightBackMotorPWM = 10;
+    final int driveEncode1 = 8;
+    final int driveEncode2 = 9;
+    final int solenoid1 = 1;
+    final int solenoid2 = 2;
+    final int victor1PWM =  4;
+            
+    /*
+     * Declarations
+     */
+    private AnalogChannel armPot = new AnalogChannel(armPotAnalogChannel);
     private Joystick stick1 = new Joystick(1);
-    private Joystick climberstick = new Joystick(3);
-    private SpeedController winchMotor = new Jaguar(3);
+    private Joystick winchStick = new Joystick(3);
+    private SpeedController winchMotor = new Jaguar(winchMotorPWM);
     private Encoder winchEncoder = new Encoder(4, 5);
-    private Solenoid winchPistonOut = new Solenoid(3);
-    private Solenoid winchPistonIn = new Solenoid(4);
-    private DigitalInput winchLimitSwitch = new DigitalInput(3);
-    private SpeedController pickUpMotor = new Jaguar(5);
-    private RobotDrive drive = new RobotDrive(1, 2);
-    private Encoder driveEncoder = new Encoder(8, 9);
+    private Solenoid winchPistonOut = new Solenoid(pistonOut);
+    private Solenoid winchPistonIn = new Solenoid(pistonIn);
+    private DigitalInput winchLimitSwitch = new DigitalInput(limitSwitch);
+    private SpeedController pickUpMotor = new Jaguar(pickUpMotorPWM);
+    private SpeedController leftFrontMotor = new Victor(leftFrontMotorPWM);
+    private SpeedController rightFrontMotor = new Victor(rightFrontMotorPWM);
+    private SpeedController leftBackMotor = new Victor(leftBackMotorPWM);
+    private SpeedController rightBackMotor = new Victor(rightBackMotorPWM);
+    private RobotDrive drive = new RobotDrive(leftFrontMotor, rightFrontMotor, leftBackMotor, rightBackMotor);
+    private Encoder driveEncoder = new Encoder(driveEncode1, driveEncode2);
     private Timer Timer = new Timer();
-    private Solenoid shiftPiston1 = new Solenoid(1);
-    private Solenoid shiftPiston2 = new Solenoid(2);
-    private SpeedController armMotor = new Victor(4);
+    private Solenoid shiftPiston1 = new Solenoid(solenoid1);
+    private Solenoid shiftPiston2 = new Solenoid(solenoid2);
+    private SpeedController armMotor = new Victor(victor1PWM);
+    final double inverter = -1.0;
+    final double distanceMove = 152.4;
+    final double autonDriveSpeed = .3;
+    final double armLimitFront = .5;
+    final double armLimitBack = -.5;
+    double setPoint = 0;
+    double currentPoint = 0;
+    double armDifference = 0;
+    double insertAutonDistance = 152.4; //5 feet in cm
     double wheelCircumference = .1;
     double distanceMemory = 0;
     final int clconstimbing_motor_PWM = 7;
     private SpeedController climbing_motor = new Victor(clconstimbing_motor_PWM);
-    final double inverter = -1.0;
-    double setPoint = 0;
-    double currentPoint = 0;
-    double armDifference = 0;
+
     /**
      * Take pot value and converts it to joystick values.
+     *
      * @param potValue double
      * @return potValue double
      */
     public double potConvert(double potValue) {
+        /*
+         * Converts pot value to Joystick values( -1 to 1 )
+         */
         double maxAllowedValue = 1.0;
         double minAllowedValue = -1.0;
         potValue = potValue - 500;
@@ -156,26 +194,41 @@ public class EncoderDrive extends SimpleRobot {
         }
         return potValue;
     }
-    
+
     public void armControl() {
-        if (stick1.getRawButton(4))
-        {
-            setPoint = 0.5;
+        /*
+         * Finds arm difference to set point; adjusts accordingly
+         */
+        if (stick1.getRawButton(4)) {
+            setPoint = armLimitFront;
         }
-        if (stick1.getRawButton(5))
-        {
-            setPoint = - 0.5;
+        if (stick1.getRawButton(5)) {
+            setPoint = armLimitBack;
         }
         //setPoint = stick1.getZ() * inverter;
         currentPoint = potConvert(armPot.getValue());
         armDifference = (setPoint - currentPoint) / 2;
         armMotor.set(armDifference);
         System.out.println(armDifference);
-        
-    // TO DO:
+
+        // TO DO:
+    }
+
+    public void winchControl(boolean winchShift, double winchSpeed) {
+        /*
+         * Shifts solenoid + sets speed for winch motor
+         */
+        winchPistonOut.set(winchShift);
+        winchPistonIn.set(!winchShift);
+        if (!winchLimitSwitch.get()) {
+            winchMotor.set(winchSpeed);
+        }
     }
 
     public void shifter() {
+        /*
+         * Shifts solenoid for winch 
+         */
         if (stick1.getRawButton(2)) {
             shiftPiston1.set(true);
             shiftPiston2.set(false);
@@ -186,21 +239,79 @@ public class EncoderDrive extends SimpleRobot {
         }
     }
 
-    public void winchControl() {
-        if (!winchLimitSwitch.get()) {
-            winchMotor.set(stick1.getY());
-
-        }
-        if (stick1.getTrigger()) {
-            winchPistonOut.set(false);
-            winchPistonIn.set(true);
-        } else {
-            winchPistonOut.set(true);
-            winchPistonIn.set(false);
+    public void activateCollector() {
+        /*
+         * Turns on collector
+         */
+        if (stick1.getRawButton(1)) {
+            pickUpMotor.set(1.0);
         }
     }
 
+    public void socketStuff() {
+        /*
+         * Sets up a socket client
+         */
+        try {
+
+            SocketConnection sc = (SocketConnection) Connector.open("socket://10.26.43.5:1180");
+
+            sc.setSocketOption(SocketConnection.LINGER, 5);
+
+            InputStream is = sc.openInputStream();
+            OutputStream os = sc.openOutputStream();
+
+
+            byte[] lineBuffer = new byte[16];
+            is.read(lineBuffer, 0, 16);
+            String isHot = new String(lineBuffer);
+            
+            /*
+             * What is this?
+             * 
+            long waitTime = 5;
+            boolean Heat = (isHot.indexOf("true") != -1);
+            //System.out.println("echo: " + isHot);
+            while (Heat || Timer.get() >= waitTime) {  
+            }
+            driveEncoder.reset();
+            */
+
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+
+
+    }
+
+    public void autonDistance(double distance) {
+        /*
+         * Moves robot in autonomous
+         */
+        double autoWC = 2.54; //one inch in centimeters
+        double autoDE = driveEncoder.get() / 360.0;
+        double autoDT = (autoDE * autoWC);
+        double distanceMove = distance;
+
+        while (autoDT <= (distanceMove)) {
+            autoDE = driveEncoder.get() / 360.0;
+            autoDT = (autoDE * autoWC);
+            leftFrontMotor.set(autonDriveSpeed);
+            rightFrontMotor.set(-autonDriveSpeed);
+            leftBackMotor.set(autonDriveSpeed);
+            rightBackMotor.set(-autonDriveSpeed);
+        }
+        driveEncoder.reset();
+        leftFrontMotor.set(0);
+        rightFrontMotor.set(0);
+        leftBackMotor.set(0);
+        rightBackMotor.set(0);
+    }
+
     public void encoderDistances() {
+        /*
+         * Prints distance traveled in total and resets encoder
+         */
         double distanceEncoder = driveEncoder.get() / 360.0;
         double distanceTravel = (distanceEncoder * wheelCircumference);
         double speed = distanceTravel / Timer.get();
@@ -208,7 +319,6 @@ public class EncoderDrive extends SimpleRobot {
             driveEncoder.reset();
             distanceTravel = 0.0;
         }
-
 
         System.out.println("distance  " + (distanceTravel + distanceMemory));
 
@@ -224,27 +334,22 @@ public class EncoderDrive extends SimpleRobot {
      * This function is called once each time the robot enters operator control.
      */
     public void autonomous() {
+        /*
+         * Autonomous loop
+         */
         System.out.println("Autonomous is ON");
         driveEncoder.start();//encoders 360 ticks per turn
-        double autoWC = 2.54; //one inch in centimeters
-        double autoDE = driveEncoder.get() / 360.0;
-        double autoDT = (autoDE * autoWC);
-
-
-        while (autoDT <= (2.54 * 60)) //5 feet in centimeters
-        {
-            
-            autoDE = driveEncoder.get() / 360.0;
-            autoDT = (autoDE * autoWC);
-            winchMotor.set(.3);
-        }
-        driveEncoder.reset();
-        winchMotor.set(0);
-
+        Timer.start();
+        socketStuff();
+        autonDistance(insertAutonDistance);
+        winchControl(false, 0);
 
     }
 
     public void operatorControl() {
+        /*
+         * This is the operator control loop
+         */
         System.out.println("works");
         winchPistonOut.set(true);
         winchPistonIn.set(false);
@@ -277,7 +382,9 @@ public class EncoderDrive extends SimpleRobot {
         while (isOperatorControl() && isEnabled()) {
             shifter();
             armControl();
-            winchControl();
+            winchControl(winchStick.getRawButton(1), winchStick.getY());
+            activateCollector();
+
             //  encoderDistances();
 
             /*climbspeed = climberstick.getY();
@@ -287,12 +394,12 @@ public class EncoderDrive extends SimpleRobot {
              climbing_motor.set(climbspeed);
              */
 
-            
-            
-           //  drive.arcadeDrive(stick1);
-             
-             
-             
+
+
+            //  drive.arcadeDrive(stick1);
+
+
+
 
 
             /*
@@ -300,7 +407,7 @@ public class EncoderDrive extends SimpleRobot {
              pickUpMotor.set(stick1.getZ());
              }
              */
-          //  System.out.println(potConvert(armPot.getValue()));
+            //  System.out.println(potConvert(armPot.getValue()));
 
 
 
