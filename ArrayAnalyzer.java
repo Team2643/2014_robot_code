@@ -65,7 +65,6 @@ public class ArrayAnalyzer {
 
         while (true) {
             ArrayList<Integer> temp = new ArrayList<>();
-            ArrayList<Integer> edge = new ArrayList<>();
             for (int i = 0; i < points.size(); i += 2) {
                 int xCoordinate = points.get(i);
                 int yCoordinate = points.get(i + 1);
@@ -91,8 +90,7 @@ public class ArrayAnalyzer {
 
                             boolArray[xSide][ySide] = false;
                         } else {
-                            edge.add(xSide);
-                            edge.add(ySide);
+                            edgeArray[xSide][ySide] = true;
                         }
                     }
                 }

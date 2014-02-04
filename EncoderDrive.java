@@ -26,21 +26,18 @@ public class EncoderDrive extends SimpleRobot {
     final int pistonOut = 3;
     final int pistonIn = 4;
     final int frontSwitchPort = 3;
-        final int leftSwitchPort = 3;
+    final int backSwitchPort = 3;
     final int pickUpMotorPWM = 7;//9-5
-    
     final int leftFrontMotorPWM = 5; //1
     final int rightFrontMotorPWM = 2; //2
     final int leftBackMotorPWM = 6; //9
     final int rightBackMotorPWM = 1; //10
-    
-    
     /*
-    final int leftFrontMotorPWM = 1; //1
-    final int rightFrontMotorPWM = 2; //2
-    final int leftBackMotorPWM = 9; //9
-    final int rightBackMotorPWM = 10; //10
-    */
+     final int leftFrontMotorPWM = 1; //1
+     final int rightFrontMotorPWM = 2; //2
+     final int leftBackMotorPWM = 9; //9
+     final int rightBackMotorPWM = 10; //10
+     */
     final int driveEncode1 = 8;
     final int driveEncode2 = 9;
     final int winchEncoder1 = 4;
@@ -61,36 +58,34 @@ public class EncoderDrive extends SimpleRobot {
     final int winchReleaseButton = 1;
     final int winchPreset1 = 2;
     final int winchPreset2 = 4;
-    
     /*
      * Declarations
      */
-    private AnalogChannel armPot = new AnalogChannel(armPotAnalogChannel);
     private AnalogChannel shooterPot = new AnalogChannel(shooterPotAnalogChannel);
     private Joystick driveStick = new Joystick(1);
     private Joystick winchStick = new Joystick(3);
-    private SpeedController winchMotor = new Jaguar(winchMotorPWM);
-    private Encoder winchEncoder = new Encoder(winchEncoder1, winchEncoder2);
-    private Solenoid winchPistonOut = new Solenoid(pistonOut);
-    private Solenoid winchPistonIn = new Solenoid(pistonIn);
     private DigitalInput frontArmSwitch = new DigitalInput(frontSwitchPort);
-    private DigitalInput backArmSwitch = new DigitalInput(leftSwitchPort);
+    private DigitalInput backArmSwitch = new DigitalInput(backSwitchPort);
     private SpeedController pickUpMotor = new Jaguar(pickUpMotorPWM);
     private SpeedController leftFrontMotor = new Victor(leftFrontMotorPWM);
     private SpeedController rightFrontMotor = new Victor(rightFrontMotorPWM);
     private SpeedController leftBackMotor = new Victor(leftBackMotorPWM);
     private SpeedController rightBackMotor = new Victor(rightBackMotorPWM);
+    private SpeedController winchMotor = new Jaguar(winchMotorPWM);
+    private SpeedController armMotor = new Victor(victor1PWM);
     private RobotDrive drive = new RobotDrive(leftFrontMotor,
             rightFrontMotor,
             leftBackMotor,
             rightBackMotor);
     private Encoder leftDriveEncoder = new Encoder(driveEncode1, driveEncode2);
     private Encoder rightDriveEncoder = new Encoder(7, 12);
+    private Encoder winchEncoder = new Encoder(winchEncoder1, winchEncoder2);
     private Timer Timer = new Timer();
     private Timer autonTimer = new Timer();
     private Solenoid shiftPiston1 = new Solenoid(solenoid1);
     private Solenoid shiftPiston2 = new Solenoid(solenoid2);
-    private SpeedController armMotor = new Victor(victor1PWM);
+    private Solenoid winchPistonOut = new Solenoid(pistonOut);
+    private Solenoid winchPistonIn = new Solenoid(pistonIn);
     final double inverter = -1.0;
     final double distanceMove = 152.4;
     final double autonDriveSpeed = .3;
@@ -103,21 +98,18 @@ public class EncoderDrive extends SimpleRobot {
     double wheelCircumference = .1;
     double distanceMemory = 0;
     double armSpeed = .5;
-    boolean toggle= true;
+    boolean toggle = true;
     boolean driveChange = true;
-    
-   
 
     /*
-    EncoderDrive() { // doing this here will make it effective for both auton and operatorcontrol
+     EncoderDrive() { // doing this here will make it effective for both auton and operatorcontrol
 
-        drive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
-        drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
-        drive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
-        drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
-    }
-    */
-
+     drive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
+     drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
+     drive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
+     drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
+     }
+     */
     /**
      * Take pot value and converts it to joystick values.
      *
@@ -150,18 +142,18 @@ public class EncoderDrive extends SimpleRobot {
         boolean goFront = false;
         boolean goBack = true;
         if (goFront) {
-            armMotor.set(armSpeed);
+            armDifference = armSpeed;
         }
         if (goBack) {
-            armMotor.set(-armSpeed);
+            armDifference = -armSpeed;
         }
-        if (!(goFront&&goBack)){
-            armMotor.set(0);
+        if (!(goFront || goBack)) {
+            armDifference = 0;
         }
         //setPoint = driveStick.getZ() * inverter;
-        
+
         armMotor.set(armDifference);
-        
+
 
         // TO DO:
     }
@@ -172,9 +164,9 @@ public class EncoderDrive extends SimpleRobot {
          */
         winchPistonOut.set(winchShift);
         winchPistonIn.set(!winchShift);
-        
-            winchMotor.set(winchSpeed);
-        
+
+        winchMotor.set(winchSpeed);
+
     }
 
     public void shifter() {
@@ -253,25 +245,30 @@ public class EncoderDrive extends SimpleRobot {
     }
 
     public void shooterControl(double setPoint) {
-
+        //Different buttons set the shooter motor to different speeds
         double shooterPotValue = potConvert(shooterPot.getValue());
 
         double shooterDifference = (setPoint - shooterPotValue) / 2;
 
-        if (winchStick.getRawButton(winchPreset1)) {
+        if (winchStick.getRawButton(winchPreset1)) 
+        {
             setPoint = -0.75;
         }
-        if (winchStick.getRawButton(winchPreset2)) {
+        if (winchStick.getRawButton(winchPreset2)) 
+        {
             setPoint = -0.5;
         }
-        if (winchStick.getRawButton(5)) {
+        if (winchStick.getRawButton(5)) 
+        {
             setPoint = 0.0;
         }
 
-        if (shooterPotValue < setPoint) {
+        if (shooterPotValue < setPoint) 
+        {
             winchControl(true, shooterDifference);
         }
-        if (shooterPotValue >= setPoint) {
+        if (shooterPotValue >= setPoint) 
+        {
             winchMotor.set(0);
         }
 
@@ -293,7 +290,7 @@ public class EncoderDrive extends SimpleRobot {
             autoDER = rightDriveEncoder.get() / 360.0;
             autoDTL = (autoDEL * autoWC);
             autoDTR = (autoDER * autoWC);
-            
+
             leftFrontMotor.set(autonDriveSpeed);
             rightFrontMotor.set(-autonDriveSpeed);
             leftBackMotor.set(autonDriveSpeed);
@@ -305,26 +302,26 @@ public class EncoderDrive extends SimpleRobot {
         rightFrontMotor.set(0);
         leftBackMotor.set(0);
         rightBackMotor.set(0);
-        
+
     }
 
     public void driveToggle() {
-        
-        if(driveStick.getRawButton(11) && toggle){
+        //It toggles between arcade drive and tank drive
+        if (driveStick.getRawButton(11) && toggle) {
             driveChange = !driveChange;
             toggle = false;
         }
-        if(!driveStick.getRawButton(11)){
+        if (!driveStick.getRawButton(11)) {
             toggle = true;
         }
-        if (driveChange){
+        if (driveChange) {
             drive.arcadeDrive(driveStick);
         }
-        if(!driveChange){
+        if (!driveChange) {
             drive.tankDrive(driveStick, winchStick);
         }
-        
-        
+
+
     }
 
     public void encoderDistances() {
@@ -372,27 +369,24 @@ public class EncoderDrive extends SimpleRobot {
          * This is the operator control loop
          */
         System.out.println("works");
-        
-        /*
-        winchPistonOut.set(true);
-        winchPistonIn.set(false);
-        */
-
-        // We moved drive code to invert motors up
 
         /*
-         * US==UltraSonic
-         * Range:0-500
+         winchPistonOut.set(true);
+         winchPistonIn.set(false);
          */
+
         
+
+        
+
         boolean operatorControl = isOperatorControl();
         boolean enabled = isEnabled();
-        
+
         drive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
         drive.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
         drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
-        
+
 
         //stateTimer.reset();
         Timer.start();
@@ -406,13 +400,13 @@ public class EncoderDrive extends SimpleRobot {
             //armControl();
             //winchControl(driveStick.getRawButton(winchReleaseButton), winchStick.getY());
             System.out.println("Works");
-            
+
             //driveToggle();
-          
-           // winchMotor.set(0.3);
+
+            // winchMotor.set(0.3);
             // drive.arcadeDrive(driveStick);
             // winchControl(winchStick.getRawButton(winchReleaseButton), winchStick.getY());
-             activateCollector();
+            activateCollector();
 
 
             //  encoderDistances();

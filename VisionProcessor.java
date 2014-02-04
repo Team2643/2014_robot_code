@@ -41,7 +41,7 @@ public class VisionProcessor {
             int height = img.getHeight();
 //        int[] pixel = new int[width*height];
 
-//        img.getRGB(0, 0, width, height, pixel, 0, width);;
+//        img.getRGB(0, 0, width, height, pixela, 0, width);;
             
             boolean[][] array = initializeArray(width, height);
 
