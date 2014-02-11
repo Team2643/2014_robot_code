@@ -103,11 +103,12 @@
  */
 package edu.wpi.first.wpilibj.templates;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.SimpleRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Joystick;
 
-public class RobotTemplate extends SimpleRobot {
+public class MotherSkill extends SimpleRobot {
 
     /**
      * This function is called once each time the robot enters autonomous mode.
@@ -119,7 +120,7 @@ public class RobotTemplate extends SimpleRobot {
     RobotDrive OurRobot;
     Joystick RightJoystick,Leftjoystick;
 
-    RobotTemplate() {
+    MotherSkill() {
         OurRobot = new RobotDrive(5, 6, 1, 2);
         OurRobot.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         OurRobot.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
@@ -135,21 +136,17 @@ public class RobotTemplate extends SimpleRobot {
     /**
      * This function is called once each time the robot enters operator control.
      */
-    public void operatorControl()
-    
-    {boolean switch_Arcadedrive;
-
-        while (isOperatorControl())
+    public void operatorControl(GenericHID OurJoystick)
+    {
+        boolean switchToArcadeDrive = false;
         
-        {
-            //OurRobot.arcadeDrive(OurJoystick);
-            OurRobot.tankDrive(Leftjoystick, RightJoystick);
-        }
-    }
-
-    /**
-     * This function is called once each time the robot enters test mode.
-     */
-    public void test() {
+        while (isOperatorControl()) {
+            switchToArcadeDrive = OurJoystick.getRawButton(1);
+            if (switchToArcadeDrive == true) {
+             OurRobot.arcadeDrive(OurJoystick);   
+            } else {
+             OurRobot.tankDrive(Leftjoystick, RightJoystick);   
+            }
+        } 
     }
 }
