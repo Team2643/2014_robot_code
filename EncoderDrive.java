@@ -47,7 +47,7 @@ public class EncoderDrive extends SimpleRobot {
     //final int victor1PWM = 4;
     final int shooterPotAnalogChannel = 5;
     //Drive Stick Buttons
-    final int armBackButton = 5;
+    final int armBackButton = 4;
     final int armFrontButton = 4;
     final int shifterButton1 = 2;
     final int shifterButton2 = 3;
@@ -115,7 +115,8 @@ public class EncoderDrive extends SimpleRobot {
     EncoderDrive() { // doing this here will make it effective for both auton and operatorcontrol
 
 
-        compressor.start();
+        compressor.start
+        ();
         // spike.set(Relay.Value.kOn);
     }
 
