@@ -198,7 +198,8 @@ public class EncoderDrive extends SimpleRobot {
         drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 
 
-        compressor.start();
+        compressor.start
+        ();
         // spike.set(Relay.Value.kOn);
     }
 
