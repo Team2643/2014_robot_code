@@ -60,8 +60,7 @@ public class EncoderDrive extends SimpleRobot {
     final int RdriveEncode1 = 3; // see raina & gary
     final int RdriveEncode2 = 4;
     
-    final int winchEncoder1 = 1;//4
-    final int winchEncoder2 = 2;//5
+
    
     //final int victor1PWM = 4;
     final int shooterSwitchPort = 5;
@@ -137,7 +136,6 @@ public class EncoderDrive extends SimpleRobot {
     private Joystick winchStick = new Joystick(3);
     private DigitalInput frontArmSwitch = new DigitalInput(frontSwitchPort);
     private DigitalInput backArmSwitch = new DigitalInput(backSwitchPort);
-    // private DigitalInput pressureSwitch = new DigitalInput(14);
     private SpeedController pickUpMotor = new Jaguar(pickUpMotorPWM);
     private SpeedController leftFrontMotor = new Victor(leftFrontMotorPWM);
     private SpeedController rightFrontMotor = new Victor(rightFrontMotorPWM);
@@ -145,7 +143,6 @@ public class EncoderDrive extends SimpleRobot {
     private SpeedController rightBackMotor = new Victor(rightBackMotorPWM);
     private SpeedController winchMotor = new Talon(winchMotorPWM1);
     //placeholder motors
-    //private SpeedController winchMotor1 = new Talon(winchMotorPWM);
     private SpeedController winchMotor2 = new Talon(winchMotorPWM2);
     private SpeedController armMotor = new Victor(armMotorPWM);//10
     private RobotDrive drive = new RobotDrive(leftFrontMotor,
@@ -153,10 +150,10 @@ public class EncoderDrive extends SimpleRobot {
             rightFrontMotor,
             rightBackMotor);
     
-    // private Relay spike = new Relay(2);
+
     private Encoder leftDriveEncoder = new Encoder(LdriveEncode1, LdriveEncode2);
     private Encoder rightDriveEncoder = new Encoder(RdriveEncode1,RdriveEncode2);
-    //private Encoder winchEncoder = new Encoder(winchEncoder1, winchEncoder2);
+
     
     private Timer Timer = new Timer();
     private Timer autonTimer = new Timer();
@@ -189,7 +186,7 @@ public class EncoderDrive extends SimpleRobot {
     int counter = 0;
     
 
-    EncoderDrive() { // doing this here will make it effective for both auton and operatorcontrol
+    EncoderDrive() { // doing this here will make it effective for both auton and operator control
 
         drive.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true); // raina & gary
         drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
@@ -200,7 +197,7 @@ public class EncoderDrive extends SimpleRobot {
 
         compressor.start
         ();
-        // spike.set(Relay.Value.kOn);
+
     }
 
     /**
@@ -231,12 +228,11 @@ public class EncoderDrive extends SimpleRobot {
         if (!(goFront || goBack)) {
             armDifference = 0;
         }
-        //setPoint = driveStick.getZ() * inverter;
 
         armMotor.set(armDifference);
 
 
-        // TO DO:
+        
     }
 
     public void winchControl(boolean winchShift, double winchSpeed) {
@@ -361,7 +357,8 @@ public class EncoderDrive extends SimpleRobot {
         }
     }
 
-    public void dumbWinch() {
+    public void dumbWinch() { 
+    //Sets winch motor to z-axis if preset is pressed
         double winchSpeed = winchStick.getZ();
         if (winchStick.getRawButton(winchPreset1)) {
             winchMotor.set(winchSpeed);
@@ -410,7 +407,9 @@ public class EncoderDrive extends SimpleRobot {
 
     }
 
-    public void DriverStationLCD(int i, String k) {
+    public void DriverStationLCD(int i, String k)
+    //allows for user messages
+    {
 
         DriverStationLCD.Line line = DriverStationLCD.Line.kUser1;
 
@@ -434,7 +433,7 @@ public class EncoderDrive extends SimpleRobot {
         DriverStationLCD.getInstance().updateLCD();
 
 
-        //println(DriverStationLCD.Line line, int startingColumn, StringBuffer text);
+
     }
 
     public void driveToggle() {
@@ -497,23 +496,14 @@ public class EncoderDrive extends SimpleRobot {
          */
         System.out.println("works");
         DriverStationLCD(1, "Teleoperated is ON");
-        /*
-         winchPistonOut.set(true);
-         winchPistonIn.set(false);
-         */
         boolean operatorControl = isOperatorControl(); // raina and gary
         boolean enabled = isEnabled();                 // wonder why these are here.
         //stateTimer.reset();
         Timer.start();
         leftDriveEncoder.start();
         rightDriveEncoder.start();
-        //winchMotor.set(0.2);
         System.out.println(operatorControl);
         System.out.println(enabled);
-        //winchControl(true, shootSpeed);
-        //System.out.println("true?" + (operatorControl && enabled));
-        
-       // while (operatorControl && enabled) {
         
         while (isOperatorControl() && isEnabled()) {  // see raina & gary
             DriverStationLCD(1, "Teleoperated is ON");
@@ -529,21 +519,16 @@ public class EncoderDrive extends SimpleRobot {
             //winchControl(driveStick.getRawButton(winchReleaseButton), winchStick.getY());
             //drive.arcadeDrive(driveStick);
             driveToggle();
-            // winchMotor.set(0.3);
-            // winchControl(winchStick.getRawButton(winchReleaseButton), winchStick.getY());
+
+
             //activateCollector();
             //System.out.println("This is working");
-            /*
-             leftBackMotor.set(driveStick.getY());
-             leftFrontMotor.set(driveStick.getY());
-             rightBackMotor.set(-winchStick.getY());
-             rightFrontMotor.set(-winchStick.getY());
-             */
             //  encoderDistances();
         }
     }
 
     public void test() {
+        //this is to test if motors are working
 
         while (isTest() && isEnabled()) {
             DriverStationLCD(2, "front left motor: " + leftFrontMotor.get());
