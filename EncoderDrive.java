@@ -28,107 +28,92 @@ public class EncoderDrive extends SimpleRobot {
      * Port Numbers
      */
     /* we think this is the 2013 config */
-        //final int armPotAnalogChannel = 4; NO ARM POT!! raina and gary
-    
-    
-    
-    final int compressorPressureSwitch =  2;
-    final int compressorRelayPort      = 14;
-    
+    //final int armPotAnalogChannel = 4; NO ARM POT!! raina and gary
+    ///*
+    final int compressorPressureSwitch = 2;
+    final int compressorRelayPort = 14;
     final int solenoid1 = 1;
     final int solenoid2 = 2;
     final int pistonOut = 3;
-    final int pistonIn  = 4;
-    
+    final int pistonIn = 4;
     final int frontSwitchPort = 6;// 2013 : top sw is true when pushed
     final int backSwitchPort = 7;//  2013: bottom sw is false when pushed
-
     final int pickUpMotorPWM = 9;//9-5
-    
     final int winchMotorPWM1 = 3; //3;//6 // pretend 2013 shooter motor
     final int winchMotorPWM2 = 4; //4;//7 // pretend 2013 shooter motor
-    
     final int leftFrontMotorPWM = 5; //9= 2013 ports , 3 = 2014 ports
     final int rightFrontMotorPWM = 1; //2 , 1
     final int leftBackMotorPWM = 6; //6 , 4
     final int rightBackMotorPWM = 2; //1 , 2
     final int armMotorPWM = 7;         // 2013 climb
-    
-    
     final int LdriveEncode1 = 1;
     final int LdriveEncode2 = 2;
     final int RdriveEncode1 = 3; // see raina & gary
     final int RdriveEncode2 = 4;
-    
     final int winchEncoder1 = 1;//4
     final int winchEncoder2 = 2;//5
-   
     //final int victor1PWM = 4;
     final int shooterSwitchPort = 5;
     //Drive Stick Buttons
-    
-    
     final int shifterButton1 = 2;
     final int shifterButton2 = 3;
-    
     final int collectorButton = 1;
     final int distanceResetButton = 11;
     final int driveToggleButton = 6;
-    
     //Winch Stick Buttons
-    
     final int armBackButton = 2;  // 2013 hook goes down
     final int armFrontButton = 3; // 2013 hook goes up
     final int winchReleaseButton = 1;
     final int winchPreset1 = 4; // was 2 2013 shooter 
     final int winchPreset2 = 5; // was 4 2013 shooter 
+    //*/
     
     // THE 2014 ROBOT SHOOTS OUT THE BACK, SAYS BEN AND JUSTIN TO RAINA AND GARY
-    
+    // 2014 setup
     /*
     
     
-    final int armPotAnalogChannel = 4;
+     final int armPotAnalogChannel = 4;
     
   
-    final int pistonOut = 3;
-    final int pistonIn = 4;
+     final int pistonOut = 3;
+     final int pistonIn = 4;
     
-    final int frontSwitchPort = 6;//8
-    final int backSwitchPort = 7;//9
-    final int pickUpMotorPWM = 5;//9-5
-    final int winchMotorPWM1 = 3;//6
-    final int winchMotorPWM2 = 4;//7
-    final int leftFrontMotorPWM = 1; //9= 2013 ports , 3 = 2014 ports
-    final int rightFrontMotorPWM = 3; //2 , 1
-    final int leftBackMotorPWM = 2; //6 , 4
-    final int rightBackMotorPWM = 4; //1 , 2
+     final int frontSwitchPort = 6;//8
+     final int backSwitchPort = 7;//9
+     final int pickUpMotorPWM = 5;//9-5
+     final int winchMotorPWM1 = 3;//6
+     final int winchMotorPWM2 = 4;//7
+     final int leftFrontMotorPWM = 1; //9= 2013 ports , 3 = 2014 ports
+     final int rightFrontMotorPWM = 3; //2 , 1
+     final int leftBackMotorPWM = 2; //6 , 4
+     final int rightBackMotorPWM = 4; //1 , 2
     
-    * // THESE four ARE CORRECT PER Ben and Justin
-    final int LdriveEncode1 = 3; 
-    final int LdriveEncode2 = 4; 
-    final int RdriveEncode1 = 1;
-    final int RdriveEncode2 = 2;
-    * 
-    // NO WINCH ENCODERS  says Ben and Justin, to Raina and Gary
-    * 
-    final int solenoid1 = 1;
-    final int solenoid2 = 2;
-    //final int victor1PWM = 4;
-    final int shooterSwitchPort = 5;
-    //Drive Stick Buttons
-    final int armBackButton = 2;
-    final int armFrontButton = 3;
-    final int shifterButton1 = 2;
-    final int shifterButton2 = 3;
-    final int collectorButton = 1;
-    final int distanceResetButton = 11;
-    final int driveToggleButton = 6;
-    //Winch Stick Buttons
-    final int winchReleaseButton = 1;
-    final int winchPreset1 = 2;
-    final int winchPreset2 = 4;
-    * */
+     * // THESE four ARE CORRECT PER Ben and Justin
+     final int LdriveEncode1 = 3; 
+     final int LdriveEncode2 = 4; 
+     final int RdriveEncode1 = 1;
+     final int RdriveEncode2 = 2;
+     * 
+     // NO WINCH ENCODERS  says Ben and Justin, to Raina and Gary
+     * 
+     final int solenoid1 = 1;
+     final int solenoid2 = 2;
+     //final int victor1PWM = 4;
+     final int shooterSwitchPort = 5;
+     //Drive Stick Buttons
+     final int armBackButton = 2;
+     final int armFrontButton = 3;
+     final int shifterButton1 = 2;
+     final int shifterButton2 = 3;
+     final int collectorButton = 1;
+     final int distanceResetButton = 11;
+     final int driveToggleButton = 6;
+     //Winch Stick Buttons
+     final int winchReleaseButton = 1;
+     final int winchPreset1 = 2;
+     final int winchPreset2 = 4;
+     */
     /*
      * Declarations
      */
@@ -152,22 +137,20 @@ public class EncoderDrive extends SimpleRobot {
             leftBackMotor,
             rightFrontMotor,
             rightBackMotor);
-    
     // private Relay spike = new Relay(2);
     private Encoder leftDriveEncoder = new Encoder(LdriveEncode1, LdriveEncode2);
-    private Encoder rightDriveEncoder = new Encoder(RdriveEncode1,RdriveEncode2);
+    private Encoder rightDriveEncoder = new Encoder(RdriveEncode1, RdriveEncode2);
     //private Encoder winchEncoder = new Encoder(winchEncoder1, winchEncoder2);
-    
     private Timer Timer = new Timer();
     private Timer autonTimer = new Timer();
     private Timer shooterTimer = new Timer();
-    
     private Compressor compressor = new Compressor(compressorRelayPort, compressorPressureSwitch);
-    private Solenoid shiftPiston1 = new Solenoid(solenoid1);
-    private Solenoid shiftPiston2 = new Solenoid(solenoid2);
+    private Solenoid rightShiftPiston1 = new Solenoid(solenoid1);
+    private Solenoid rightShiftPiston2 = new Solenoid(solenoid2);
+    private Solenoid leftShiftPiston1 = new Solenoid(solenoid1);
+    private Solenoid leftShiftPiston2 = new Solenoid(solenoid2);
     private Solenoid winchPistonOut = new Solenoid(pistonOut);
     private Solenoid winchPistonIn = new Solenoid(pistonIn);
-    
     final double inverter = -1.0;
     final double distanceMove = 152.4;
     final double autonDriveSpeed = .3;
@@ -187,7 +170,6 @@ public class EncoderDrive extends SimpleRobot {
     boolean shooterTimerInit = true;
     int shooterState = 2;
     int counter = 0;
-    
 
     EncoderDrive() { // doing this here will make it effective for both auton and operatorcontrol
 
@@ -198,8 +180,7 @@ public class EncoderDrive extends SimpleRobot {
         drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 
 
-        compressor.start
-        ();
+        compressor.start();
         // spike.set(Relay.Value.kOn);
     }
 
@@ -215,7 +196,7 @@ public class EncoderDrive extends SimpleRobot {
          */
         boolean goFront = false;
         boolean goBack = true;
-        
+
         goFront = winchStick.getRawButton(armFrontButton) && !frontArmSwitch.get(); // 2013 & 2014
         if (debug) {
             goBack = winchStick.getRawButton(armBackButton) && backArmSwitch.get();  // 2013 'bot
@@ -256,12 +237,16 @@ public class EncoderDrive extends SimpleRobot {
          * Shifts solenoid for winch 
          */
         if (driveStick.getRawButton(shifterButton1)) {
-            shiftPiston1.set(true);
-            shiftPiston2.set(false);
+            rightShiftPiston1.set(true);
+            rightShiftPiston2.set(false);
+            leftShiftPiston1.set(true);
+            leftShiftPiston2.set(false);
         }
         if (driveStick.getRawButton(shifterButton2)) {
-            shiftPiston1.set(false);
-            shiftPiston2.set(true);
+            rightShiftPiston1.set(false);
+            rightShiftPiston2.set(true);
+            leftShiftPiston1.set(false);
+            leftShiftPiston2.set(true);
         }
     }
 
@@ -366,17 +351,13 @@ public class EncoderDrive extends SimpleRobot {
         if (winchStick.getRawButton(winchPreset1)) {
             winchMotor.set(winchSpeed);
             winchMotor2.set(winchSpeed);
-        } 
-        
-        else if (winchStick.getRawButton(winchPreset2)) {
+        } else if (winchStick.getRawButton(winchPreset2)) {
             winchMotor.set(-winchSpeed);
             winchMotor2.set(-winchSpeed);
-        } 
-        
-        else {
-           
-             winchMotor.set(0.0); 
-             winchMotor2.set(0.0); // added raina & gary
+        } else {
+
+            winchMotor.set(0.0);
+            winchMotor2.set(0.0); // added raina & gary
         }
     }
 
@@ -488,7 +469,7 @@ public class EncoderDrive extends SimpleRobot {
         leftDriveEncoder.start();//encoders 250 ticks per turn
         Timer.start();
         getImgData();
-        
+
     }
 
     public void operatorControl() {
@@ -512,17 +493,17 @@ public class EncoderDrive extends SimpleRobot {
         System.out.println(enabled);
         //winchControl(true, shootSpeed);
         //System.out.println("true?" + (operatorControl && enabled));
-        
-       // while (operatorControl && enabled) {
-        
+
+        // while (operatorControl && enabled) {
+
         while (isOperatorControl() && isEnabled()) {  // see raina & gary
             DriverStationLCD(1, "Teleoperated is ON");
-            
+
             //System.out.println(frontArmSwitch.get() +" "+ backArmSwitch.get()); // raina & gary
-            
+
             //shooterControl((winchStick.getRawButton(1) && winchStick.getRawButton(4)),
              /*shooterSwitch.get()*///backArmSwitch.get(), winchStick.getRawButton(5));
-             
+
             dumbWinch();
             shifter();  // enabled raina and gary - uses frisbee shooter piston
             armControl();
@@ -555,46 +536,52 @@ public class EncoderDrive extends SimpleRobot {
 
             double z_axis = driveStick.getZ();
             // buttons corrolate to physical positions of motors
-            
-            if (driveStick.getRawButton(6)) 
-                leftFrontMotor.set(z_axis);
-              else 
-                leftFrontMotor.set(0.0);
-            
-            if (driveStick.getRawButton(7))
-                leftBackMotor.set(z_axis);
-            else 
-                leftBackMotor.set(0.0);
-               
-            if (driveStick.getRawButton(10))
-                rightFrontMotor.set(z_axis);
-            else 
-             rightFrontMotor.set(0.0);
-           
-            if (driveStick.getRawButton(11))
-                rightBackMotor.set(z_axis);
-            else
-                rightBackMotor.set(0.0);
-               
-            if (driveStick.getRawButton(3))
-                winchMotor.set(z_axis);
 
-            else
+            if (driveStick.getRawButton(6)) {
+                leftFrontMotor.set(z_axis);
+            } else {
+                leftFrontMotor.set(0.0);
+            }
+
+            if (driveStick.getRawButton(7)) {
+                leftBackMotor.set(z_axis);
+            } else {
+                leftBackMotor.set(0.0);
+            }
+
+            if (driveStick.getRawButton(10)) {
+                rightFrontMotor.set(z_axis);
+            } else {
+                rightFrontMotor.set(0.0);
+            }
+
+            if (driveStick.getRawButton(11)) {
+                rightBackMotor.set(z_axis);
+            } else {
+                rightBackMotor.set(0.0);
+            }
+
+            if (driveStick.getRawButton(3)) {
+                winchMotor.set(z_axis);
+            } else {
                 winchMotor.set(0.0);
-            
-            if (driveStick.getRawButton(4)) 
+            }
+
+            if (driveStick.getRawButton(4)) {
                 winchMotor2.set(z_axis);
-            else
+            } else {
                 winchMotor2.set(0.0);
-            
-            
-           
-            if (driveStick.getRawButton(1)) 
+            }
+
+
+
+            if (driveStick.getRawButton(1)) {
                 armMotor.set(z_axis);
-             else 
+            } else {
                 armMotor.set(0.0);
-               
-            
+            }
+
+
         }
     }
 }
